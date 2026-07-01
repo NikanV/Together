@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/*
+  Minimal, neutral placeholder styling.
+  Once you share your real designs, this is where brand colors,
+  fonts, and any @theme tokens will go.
+*/
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
