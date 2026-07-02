@@ -116,9 +116,20 @@ components should mostly be a copy-paste plus an import-path fix.
 
 ## Notes for later
 
-- The production bundle is one JS chunk (~575 kB / 174 kB gzipped). That's
+- **`events` is a direct dependency on purpose.** The `parse` package uses
+  Node's built-in `EventEmitter` internally (for its LiveQuery client, which
+  gets touched even by a plain `Parse.initialize()` call). Vite doesn't
+  polyfill Node built-ins the way older bundlers did, so without a real
+  `events` package installed, that import gets silently stubbed out and
+  `Parse.initialize()` throws `TypeError: Emitter is not a constructor` at
+  runtime. Don't remove this dependency even though nothing here imports it
+  directly.
+- The production bundle is one JS chunk (~580 kB / 176 kB gzipped). That's
   fine for now; once real pages replace the placeholders, route-level
   `React.lazy()` code-splitting is a quick win if it grows further.
 - `npm audit` flags a transitive `ws` vulnerability inside the `parse`
   package (used only for optional Live Query features we're not using). It
   doesn't affect a browser-only SPA build; revisit if you enable Live Query.
+- An `EBADENGINE` warning from `parse` about your Node version is safe to
+  ignore — it's about the Node version running your tooling, not the browser
+  environment the bundle actually runs in.
