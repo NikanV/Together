@@ -1,16 +1,21 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { UserPlus } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import { AuthLayout } from '@/components/layout/AuthLayout'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { Card } from '@/components/ui/Card'
+import { Textarea } from '@/components/ui/Textarea'
+import { Label } from '@/components/ui/Label'
 
 export default function SignupPage() {
   const { signUp, isBackendConfigured } = useAuth()
   const navigate = useNavigate()
-  const [username, setUsername] = useState('')
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [bio, setBio] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -25,7 +30,7 @@ export default function SignupPage() {
 
     setIsSubmitting(true)
     try {
-      await signUp(username, email, password)
+      await signUp(username, email, password, { displayName: name, bio })
       navigate('/dashboard')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not sign up.')
@@ -35,47 +40,54 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-      <Card className="w-full max-w-sm">
-        <h1 className="mb-1 text-xl font-semibold text-slate-900">Create your account</h1>
-        <p className="mb-6 text-sm text-slate-500">Start a routine with your friends today.</p>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
-            required
-          />
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="new-password"
-            minLength={8}
-            required
-          />
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? 'Creating account…' : 'Sign up'}
-          </Button>
-        </form>
-        <p className="mt-4 text-center text-sm text-slate-500">
-          Already have an account?{' '}
-          <Link to="/login" className="font-medium text-indigo-600">
-            Log in
-          </Link>
-        </p>
-      </Card>
-    </div>
+    <AuthLayout>
+      {error && (
+        <div className="border-l-2 border-rose-600 bg-rose-50 p-3 font-mono text-xs text-rose-800" role="alert">
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <Label htmlFor="signup-name">Full Name</Label>
+          <Input id="signup-name" type="text" placeholder="Clara Key" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" required />
+        </div>
+
+        <div>
+          <Label htmlFor="signup-email">Email Address</Label>
+          <Input id="signup-email" type="email" placeholder="clara@together.app" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
+        </div>
+
+        <div>
+          <Label htmlFor="signup-username">Username</Label>
+          <Input id="signup-username" type="text" placeholder="clara" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" required />
+        </div>
+
+        <div>
+          <Label htmlFor="signup-password">Password</Label>
+          <Input id="signup-password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" minLength={8} required />
+        </div>
+
+        <div>
+          <Label htmlFor="signup-bio">Short Bio (Optional)</Label>
+          <Textarea id="signup-bio" placeholder="Let's build habits together!" value={bio} onChange={(e) => setBio(e.target.value)} rows={2} />
+        </div>
+
+        <Button type="submit" disabled={isSubmitting} className="mt-6 w-full">
+          {isSubmitting ? (
+            <span aria-hidden="true" className="mr-2 inline-block h-4 w-4 animate-spin border-2 border-white border-t-transparent" />
+          ) : (
+            <UserPlus className="mr-2 h-4 w-4" />
+          )}
+          Create Account
+        </Button>
+      </form>
+
+      <div className="text-center">
+        <Link to="/login" className="font-mono text-xs uppercase tracking-wider text-ink/60 transition-colors hover:text-accent">
+          Log In instead
+        </Link>
+      </div>
+    </AuthLayout>
   )
 }

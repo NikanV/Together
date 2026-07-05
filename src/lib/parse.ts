@@ -25,7 +25,5 @@ if (isBackendConfigured) {
   )
 }
 
-// Never import or use a Master Key in this project — it belongs on a
-// trusted server only, never in frontend code that ships to the browser.
 
 export default Parse

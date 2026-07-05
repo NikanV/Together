@@ -6,14 +6,12 @@ export function ProtectedRoute() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center text-slate-500">
+      <div className="flex h-screen items-center justify-center bg-cream font-mono text-xs uppercase tracking-widest text-ink/50">
         Loading…
       </div>
     )
   }
-
-  // Back4App isn't connected yet — let the app through so the flow can be
-  // clicked through with sample data. Remove this once auth is live.
+  
   if (!isBackendConfigured) {
     return <Outlet />
   }
