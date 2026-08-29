@@ -32,11 +32,6 @@
  *   proofFile    File     (optional, only for proof_approval routines)
  *   proofNote    String   (optional, the "what did you do" text)
  *   approvedBy   Array<Pointer<_User>>
- *
- * ActivityLog
- *   routine   Pointer<Routine>
- *   user      Pointer<_User>  (omit for system-generated entries, e.g. streak milestones)
- *   detail    String
  */
 
 export interface TogetherUser {
@@ -86,12 +81,4 @@ export interface StreakEntry {
   proofUrl?: string
   proofNote?: string
   approvedBy?: string[]
-}
-
-export interface ActivityLogEntry {
-  objectId: string
-  routineId: string
-  username: string | null
-  detail: string
-  createdAt: string
 }
