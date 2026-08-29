@@ -1,7 +1,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Check, Award, Camera, CheckSquare, FileText, Flame, ThumbsUp, Bell } from 'lucide-react'
+import { Check, Award, Camera, CheckSquare, FileText, Flame, ThumbsUp } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -45,12 +45,6 @@ export default function RoutineDetailPage() {
     queryKey: ['routine', routineId, 'approvals'],
     queryFn: () => routineService.getPendingApprovals(routineId),
     enabled,
-  })
-
-  const { data: activityLog = [] } = useQuery({
-    queryKey: ['routine', routineId, 'activity'],
-    queryFn: () => routineService.getActivityLog(routineId),
-    enabled: enabled && activeTab === 'history',
   })
 
   const last7Dates = Array.from({ length: 7 }, (_, i) => {
@@ -158,7 +152,7 @@ export default function RoutineDetailPage() {
           [
             ['status', 'Daily Check-in'],
             ['approvals', `Approve Proofs (${pendingApprovals.length})`],
-            ['history', 'History & Logs'],
+            ['history', 'History'],
           ] as const
         ).map(([key, label]) => (
           <button
@@ -407,34 +401,6 @@ export default function RoutineDetailPage() {
               <p className="mt-3 text-center text-[10px] text-ink/40">
                 A day only lights up once every crew member has checked in on it.
               </p>
-            </Card>
-          </div>
-
-          <div>
-            <h4 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-ink/50">Activity Log</h4>
-            <Card className="divide-y divide-ink/5 p-0">
-              {activityLog.map((log) => (
-                <div key={log.objectId} className="flex items-start space-x-2.5 p-3 text-xs">
-                  {log.username ? (
-                    <img
-                      src={getAvatarUrl(log.username)}
-                      alt={log.username}
-                      className="mt-0.5 h-6 w-6 border border-ink/15 object-cover"
-                    />
-                  ) : (
-                    <div className="mt-0.5 flex h-6 w-6 items-center justify-center border border-ink/15 bg-ink/5 text-ink/40">
-                      <Bell className="h-3 w-3" />
-                    </div>
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-ink">{log.username ? `@${log.username}` : 'Streak update'}</p>
-                    <p className="mt-0.5 text-ink/50">{log.detail}</p>
-                  </div>
-                </div>
-              ))}
-              {activityLog.length === 0 && (
-                <p className="py-8 text-center text-xs text-ink/40">Nothing logged yet.</p>
-              )}
             </Card>
           </div>
         </div>
