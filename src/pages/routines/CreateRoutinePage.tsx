@@ -1,10 +1,9 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Dumbbell, Heart, Award, BookOpen, PenTool, Check, Image as ImageIcon, Users } from 'lucide-react'
+import { Check, Image as ImageIcon, Users } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
-import { Textarea } from '@/components/ui/Textarea'
 import { Label } from '@/components/ui/Label'
 import { Button } from '@/components/ui/Button'
 import { getAvatarUrl } from '@/lib/avatar'
@@ -12,22 +11,12 @@ import { cn } from '@/lib/utils'
 import { useAuth } from '@/contexts/AuthContext'
 import { getFriends } from '@/services/friendsService'
 import { createRoutine } from '@/services/routineService'
-import { ROUTINE_CATEGORIES, type RoutineCategory, type VerificationType } from '@/types/models'
-
-const CATEGORY_ICONS: Record<RoutineCategory, typeof Dumbbell> = {
-  Fitness: Dumbbell,
-  Wellness: Heart,
-  Growth: Award,
-  Study: BookOpen,
-  Creative: PenTool,
-}
+import { type VerificationType } from '@/types/models'
 
 export default function CreateRoutinePage() {
   const navigate = useNavigate()
   const { isBackendConfigured } = useAuth()
   const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [category, setCategory] = useState<RoutineCategory>('Fitness')
   const [verificationType, setVerificationType] = useState<VerificationType>('self_check')
   const [invited, setInvited] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -61,7 +50,7 @@ export default function CreateRoutinePage() {
       return
     }
 
-    createMutation.mutate({ name, description, category, verificationType, memberIds: invited })
+    createMutation.mutate({ name, verificationType, memberIds: invited })
   }
 
   return (
@@ -90,7 +79,7 @@ export default function CreateRoutinePage() {
             />
           </div>
 
-          <div>
+          {/* <div>
             <Label htmlFor="routine-description">Description / Promise</Label>
             <Textarea
               id="routine-description"
@@ -99,31 +88,7 @@ export default function CreateRoutinePage() {
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
             />
-          </div>
-
-          <div>
-            <Label>Category</Label>
-            <div className="flex flex-wrap gap-2">
-              {ROUTINE_CATEGORIES.map((cat) => {
-                const Icon = CATEGORY_ICONS[cat]
-                const isSelected = category === cat
-                return (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => setCategory(cat)}
-                    className={cn(
-                      'flex cursor-pointer items-center space-x-1.5 border px-3 py-1.5 font-mono text-xs uppercase tracking-wide transition-all',
-                      isSelected ? 'border-ink bg-ink text-cream' : 'border-ink/15 text-ink/60 hover:border-ink/40'
-                    )}
-                  >
-                    <Icon className="h-3.5 w-3.5" />
-                    <span>{cat}</span>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
+          </div> */}
 
           <div>
             <Label>Verification System</Label>

@@ -1,6 +1,5 @@
 import Parse from '@/lib/parse'
 import type {
-  RoutineCategory,
   StreakEntry,
   StreakEntryStatus,
   TogetherUser,
@@ -11,7 +10,6 @@ export interface RoutineWithDetails {
   objectId: string
   name: string
   description?: string
-  category: RoutineCategory
   verificationType: VerificationType
   currentStreak: number
   createdAt: string
@@ -136,7 +134,6 @@ export async function getPendingApprovals(routineId: string): Promise<PendingApp
 export async function createRoutine(input: {
   name: string
   description?: string
-  category: RoutineCategory
   verificationType: VerificationType
   memberIds: string[]
 }): Promise<RoutineWithDetails> {

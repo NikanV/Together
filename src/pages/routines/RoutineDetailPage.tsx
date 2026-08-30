@@ -61,8 +61,6 @@ export default function RoutineDetailPage() {
   })
 
   function invalidateRoutine() {
-    // Prefix invalidation — this also covers the entries/approvals/activity/
-    // range keys above, since they all start with ['routine', routineId].
     queryClient.invalidateQueries({ queryKey: ['routine', routineId] })
     queryClient.invalidateQueries({ queryKey: ['routines'] })
   }
@@ -131,11 +129,8 @@ export default function RoutineDetailPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 border border-ink/15 bg-white p-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <span className="border border-ink/10 bg-ink/5 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-ink/60">
-            {routine.category}
-          </span>
           <h1 className="mt-2 text-xl font-extrabold uppercase tracking-tight text-ink">{routine.name}</h1>
-          {routine.description && <p className="mt-1 max-w-md text-xs text-ink/60">{routine.description}</p>}
+          {/* {routine.description && <p className="mt-1 max-w-md text-xs text-ink/60">{routine.description}</p>} */}
         </div>
         <div className="flex items-center gap-1.5 self-start border border-accent/30 bg-accent/5 px-3 py-1.5">
           <Flame className="h-5 w-5 fill-current text-accent" />
@@ -151,7 +146,9 @@ export default function RoutineDetailPage() {
         {(
           [
             ['status', 'Daily Check-in'],
-            ['approvals', `Approve Proofs (${pendingApprovals.length})`],
+            ...(routine.verificationType === 'proof_approval'
+            ? [['approvals', `Approve Proofs (${pendingApprovals.length})`] as const]
+            : []),
             ['history', 'History'],
           ] as const
         ).map(([key, label]) => (

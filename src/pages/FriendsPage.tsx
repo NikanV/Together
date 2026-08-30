@@ -140,9 +140,6 @@ export default function FriendsPage() {
             </p>
           )}
         </div>
-        <p className="font-mono text-[10px] text-ink/40">
-          Needs Find permission on _User in Back4App — see the security note in friendsService.ts.
-        </p>
       </Card>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
