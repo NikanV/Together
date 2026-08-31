@@ -22,10 +22,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (isBackendConfigured) {
-      setUser(Parse.User.current() ?? null)
+    async function restoreSession() {
+      if (!isBackendConfigured) {
+        setUser(null)
+        setIsLoading(false)
+        return
+      }
+
+      try {
+        const currentUser = await Parse.User.currentAsync()
+        setUser(currentUser ?? null)
+      } catch (error) {
+        console.error('Failed to restore Parse session:', error)
+        setUser(null)
+      } finally {
+        setIsLoading(false)
+      }
     }
-    setIsLoading(false)
+
+    restoreSession()
   }, [])
 
   async function signUp(
