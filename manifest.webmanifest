@@ -1,0 +1,11 @@
+{
+  "name": "Together",
+  "short_name": "Together",
+  "icons": [
+    {
+      "src": "/public/logo.png",
+      "sizes": "724x724",
+      "type": "image/png"
+    }
+  ]
+}
