@@ -17,9 +17,6 @@ export default function LandingPage() {
           <Button variant="secondary">Log in</Button>
         </Link>
       </div>
-      <p className="text-xs text-slate-400">
-        Placeholder landing page — swap for your real design when it's ready.
-      </p>
     </div>
   )
 }
