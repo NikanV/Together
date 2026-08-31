@@ -18,9 +18,9 @@ export function Navbar() {
             <Menu className="h-6 w-6" />
           </button>
 
-          <span className="font-mono text-xs font-bold uppercase tracking-widest text-ink/60">
+          <Link to="/dashboard" aria-label="Go to dashboard" className="font-mono text-xs font-bold uppercase tracking-widest text-ink/60 transition-colors hover:text-accent">
             Together Streaks
-          </span>
+          </Link>
 
           <Link to="/profile" aria-label="Profile and settings" className="text-ink hover:text-accent">
             <UserCircle className="h-6 w-6" />
