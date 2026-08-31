@@ -13,6 +13,12 @@ interface AuthContextValue {
   ) => Promise<void>
   logIn: (usernameOrEmail: string, password: string) => Promise<void>
   logOut: () => Promise<void>
+  updateProfile: (
+    displayName: string,
+    username: string,
+    bio: string
+  ) => Promise<void>
+  updateAvatar: (file: File) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
@@ -54,8 +60,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
   }
 
+  
+  async function updateProfile(displayName: string, username: string, bio: string) {
+    const result = await Parse.Cloud.run('updateProfile', {displayName, username, bio,})
+
+    const currentUser = Parse.User.current()
+
+    if (!currentUser) return
+
+    currentUser.set('displayName', result.displayName)
+    currentUser.set('username', result.username)
+    currentUser.set('bio', result.bio)
+    setUser(currentUser)
+  }
+
+  async function updateAvatar(file: File) {
+    const parseFile = new Parse.File(file.name, file)
+
+    await parseFile.save()
+    
+    const result = await Parse.Cloud.run('updateAvatar', {avatarFile: parseFile,})
+    const currentUser = Parse.User.current()
+
+    if (!currentUser) return
+
+    currentUser.set('avatarUrl', result.avatarUrl)
+    setUser(currentUser)
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, isBackendConfigured, signUp, logIn, logOut }}>
+    <AuthContext.Provider value={{ user, isLoading, isBackendConfigured, signUp, logIn, logOut, updateProfile, updateAvatar }}>
       {children}
     </AuthContext.Provider>
   )
