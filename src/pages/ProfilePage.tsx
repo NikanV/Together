@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/Card'
 import { useRef, useState } from 'react'
 
 export default function ProfilePage() {
-  const { user, isBackendConfigured, updateProfile, updateAvatar, } = useAuth()
+  const { profile, isBackendConfigured, updateProfile, updateAvatar } = useAuth()
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [editing, setEditing] = useState(false)
@@ -14,25 +14,20 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
-  if (!isBackendConfigured || !user) {
+  if (!isBackendConfigured || !profile) {
     return (
       <div className="mx-auto w-full max-w-md">
         <Card>
-          <p className="text-sm text-ink/50">
-            Connect Back4App to see your profile here.
-          </p>
+          <p className="text-sm text-ink/50">Connect Back4App to see your profile here.</p>
         </Card>
       </div>
     )
   }
 
-  const currentDisplayName = user.get('displayName') || ''
-
-  const currentUsername = user.get('username') || ''
-
-  const currentBio = user.get('bio') || ''
-
-  const avatarUrl = user.get('avatarUrl') || ''
+  const currentDisplayName = profile.displayName || ''
+  const currentUsername = profile.username || ''
+  const currentBio = profile.bio || ''
+  const avatarUrl = profile.avatarUrl || ''
 
   function startEditing() {
     setDisplayName(currentDisplayName)
